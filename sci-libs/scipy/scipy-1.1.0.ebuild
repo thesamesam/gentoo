@@ -88,6 +88,11 @@ python_prepare_all() {
 	export SCIPY_FCONFIG="config_fc --noopt --noarch"
 	append-fflags -fPIC
 
+	# GCC 10 workaround
+	# Remove once upstream PR #11842 lands into next release
+	local fcflag="-fallow-argument-mismatch"
+	test-flag-FC ${fcflag} && append-fflags ${fcflag}
+
 	local libdir="${EPREFIX}"/usr/$(get_libdir)
 	cat >> site.cfg <<-EOF || die
 		[blas]

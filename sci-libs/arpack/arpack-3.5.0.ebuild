@@ -29,11 +29,16 @@ S="${WORKDIR}/${PN}-ng-${PV}"
 
 src_prepare() {
 	default
+
+	# GCC 10 workaround; remove once new release cut
+	# https://github.com/opencollab/arpack-ng/issues/261
+	local fcflag="-fallow-argument-mismatch"
+	test-flag-FC ${fcflag} && append-fflags ${fcflag}
+
 	eautoreconf
 }
 
 src_configure() {
-	append-fflags -fallow-argument-mismatch
 	econf \
 		--disable-static \
 		--with-blas="$($(tc-getPKG_CONFIG) --libs blas)" \

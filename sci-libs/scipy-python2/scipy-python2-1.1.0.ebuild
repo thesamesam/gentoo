@@ -80,6 +80,7 @@ python_prepare_all() {
 	export F90="${FC}"
 	export SCIPY_FCONFIG="config_fc --noopt --noarch"
 	append-fflags -fPIC
+	append-fflags $(test-flag-FC -fallow-argument-mismatch)
 
 	local libdir="${EPREFIX}"/usr/$(get_libdir)
 	cat >> site.cfg <<-EOF || die

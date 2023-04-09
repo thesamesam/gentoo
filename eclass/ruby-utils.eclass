@@ -22,6 +22,22 @@ esac
 
 if [[ ! ${_RUBY_UTILS} ]]; then
 
+# @ECLASS_VARIABLE: RUBY
+# @DEFAULT_UNSET
+# @DESCRIPTION:
+# The absolute path to the current Ruby interpreter.
+#
+# This variable is set automatically in the following contexts:
+#
+# ruby-ng: Set in functions called by _ruby_each_implementation, including
+# each_ruby_*.
+#
+# ruby-single: Set after calling ruby_setup().
+#
+# Example value:
+# @CODE
+# /usr/bin/ruby3.2
+# @CODE
 
 # @ECLASS_VARIABLE: RUBY_TARGETS_PREFERENCE
 # @INTERNAL

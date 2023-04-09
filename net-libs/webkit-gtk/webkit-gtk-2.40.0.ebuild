@@ -6,7 +6,7 @@ PYTHON_REQ_USE="xml(+)"
 PYTHON_COMPAT=( python3_{9..11} )
 USE_RUBY="ruby30 ruby31"
 
-inherit check-reqs flag-o-matic gnome2 optfeature python-any-r1 ruby-single toolchain-funcs cmake
+inherit check-reqs flag-o-matic gnome2 optfeature python-any-r1 ruby-any toolchain-funcs cmake
 
 MY_P="webkitgtk-${PV}"
 DESCRIPTION="Open source web browser engine"
@@ -169,19 +169,7 @@ src_configure() {
 		append-ldflags $(test-flags-CCLD "-Wl,--no-keep-memory")
 	fi
 
-	# Ruby situation is a bit complicated. See bug 513888
-	local rubyimpl
-	local ruby_interpreter=""
-	local RUBY
-	for rubyimpl in ${USE_RUBY}; do
-		if has_version -b "virtual/rubygems[ruby_targets_${rubyimpl}]"; then
-			RUBY="$(type -P ${rubyimpl})"
-			ruby_interpreter="-DRUBY_EXECUTABLE=${RUBY}"
-		fi
-	done
-	# This will rarely occur. Only a couple of corner cases could lead us to
-	# that failure. See bug 513888
-	[[ -z ${ruby_interpreter} ]] && die "No suitable ruby interpreter found"
+	ruby_setup
 	# JavaScriptCore/Scripts/postprocess-asm invokes another Ruby script directly
 	# so it doesn't respect RUBY_EXECUTABLE, bug #771744.
 	sed -i -e "s:#!/usr/bin/env ruby:#!${RUBY}:" $(grep -rl "/usr/bin/env ruby" Source/JavaScriptCore || die) || die

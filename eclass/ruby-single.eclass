@@ -33,6 +33,12 @@ _RUBY_SINGLE_ECLASS=1
 
 inherit ruby-utils
 
+if [[ ${_RUBY_ANY_ECLASS} ]]; then
+	die "ruby-any.eclass can not be used with ruby-single.eclass."
+elif [[ ${_RUBY_NG_ECLASS} ]]; then
+	die "ruby-ng.eclass can not be used with ruby-single.eclass."
+fi
+
 # @ECLASS_VARIABLE: USE_RUBY
 # @DEFAULT_UNSET
 # @PRE_INHERIT
@@ -67,6 +73,37 @@ inherit ruby-utils
 #
 # The order of dependencies will change over time to best match the
 # current state of ruby targets, e.g. stable version first.
+
+# @FUNCTION: ruby_setup
+# @USAGE: [<impl-pattern>...]
+# @DESCRIPTION:
+# Find the best (most preferred) Ruby implementation that is suitable
+# for running common Ruby code. Set the Ruby build environment up
+# for that implementation.
+ruby_setup() {
+	local impl
+	local ruby_candidate
+
+	for impl in ${RUBY_TARGETS_PREFERENCE}; do
+		if ! [[ ${USE_RUBY} =~ ${impl} ]]; then
+			continue
+		fi
+
+		# Only proceed if it's requested
+		if ! use ruby_targets_${impl} || ! has_version "virtual/rubygems[ruby_targets_${impl}(-)]"; then
+			continue
+		fi
+
+		ruby_candidate=$(ruby_implementation_command ${impl})
+		if [[ -n ${ruby_candidate} ]] ; then
+			export RUBY="${ruby_candidate}"
+		fi
+	done
+
+	if [[ -z ${RUBY} ]] ; then
+		die "No compatible Ruby implementations from USE_RUBY are installed."
+	fi
+}
 
 _ruby_single_implementations_depend() {
 	local depend

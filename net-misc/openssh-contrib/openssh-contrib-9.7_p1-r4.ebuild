@@ -208,6 +208,8 @@ src_prepare() {
 			"${S}"/version.h || die "Failed to sed-in HPN patch version"
 		PATCHSET_VERSION_MACROS+=( 'SSH_HPN' )
 
+		sed -i -e 's:# define CIPHER_UNALIGNED_OK:# undef CIPHER_UNALIGNED_OK:' cipher-ctr-mt.c || die
+
 		if [[ -n "${HPN_DISABLE_MTAES}" ]] ; then
 			# Before re-enabling, check https://bugs.gentoo.org/354113#c6
 			# and be sure to have tested it.

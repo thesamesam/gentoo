@@ -81,6 +81,8 @@ src_prepare() {
 }
 
 multilib_src_configure() {
+	sed -i -e 's:#define XXH_USE_UNALIGNED_ACCESS 1:#undef XXH_USE_UNALIGNED_ACCESS:' libarchive/xxhash.c || die
+
 	export ac_cv_header_ext2fs_ext2_fs_h=$(usex e2fsprogs) #354923
 
 	local myconf=(

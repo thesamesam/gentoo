@@ -66,6 +66,7 @@ PATCHES=(
 	"${FILESDIR}"/${PN}-0.191-musl-macros.patch
 	"${FILESDIR}"/${PN}-0.191-avoid-overriding-libcxx-system-header.patch
 	"${FILESDIR}"/${PN}-0.191-musl-configure-better-error-h-check.patch
+	"${FILESDIR}"/${PN}-0.1.89-Allow-overriding-ALLOW_UNALIGNED-macro.patch
 )
 
 src_prepare() {
@@ -115,6 +116,7 @@ multilib_src_configure() {
 	)
 
 	[[ ${PV} == 9999 ]] && myeconfargs+=( --enable-maintainer-mode )
+	append-cppflags -DALLOW_UNALIGNED=0
 
 	# Needed because sets alignment macro
 	is-flagq -fsanitize=address && myeconfargs+=( --enable-sanitize-address )

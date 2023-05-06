@@ -121,6 +121,8 @@ multilib_src_configure() {
 
 	[[ ${PV} == 9999 ]] && myeconfargs+=( --enable-maintainer-mode )
 
+	append-cppflags -DALLOW_UNALIGNED=0
+
 	# Needed because sets alignment macro
 	is-flagq -fsanitize=address && myeconfargs+=( --enable-sanitize-address )
 	is-flagq -fsanitize=undefined && myeconfargs+=( --enable-sanitize-undefined )

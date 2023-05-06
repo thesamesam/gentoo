@@ -1,0 +1,33 @@
+From f0e2ff15066ce84549a22fa3415eef5f9a55016d Mon Sep 17 00:00:00 2001
+From: Sam James <sam@gentoo.org>
+Date: Sat, 6 May 2023 03:50:57 +0100
+Subject: [PATCH] Allow overriding ALLOW_UNALIGNED macro
+
+Check if ALLOW_UNALIGNED is defined before setting it to allow it to be set
+in *FLAGS, like -UALLOW_UNALIGNED.
+
+See also 170f1bb0a8f49cd6c5e7b34aaa505928764866bb.
+
+Signed-off-by: Sam James <sam@gentoo.org>
+--- a/lib/eu-config.h
++++ b/lib/eu-config.h
+@@ -88,10 +88,12 @@
+ /* Define ALLOW_UNALIGNED if the architecture allows operations on
+    unaligned memory locations.  */
+ #define SANITIZE_UNDEFINED 1
+-#if (defined __i386__ || defined __x86_64__) && ! CHECK_UNDEFINED
+-# define ALLOW_UNALIGNED	1
+-#else
+-# define ALLOW_UNALIGNED	0
++#ifndef ALLOW_UNALIGNED
++# if (defined __i386__ || defined __x86_64__) && ! CHECK_UNDEFINED
++#  define ALLOW_UNALIGNED	1
++# else
++#  define ALLOW_UNALIGNED	0
++# endif
+ #endif
+ 
+ #if DEBUGPRED
+-- 
+2.40.1
+

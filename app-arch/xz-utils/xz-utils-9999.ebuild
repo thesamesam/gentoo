@@ -67,6 +67,7 @@ src_prepare() {
 
 multilib_src_configure() {
 	local myconf=(
+		--disable-unaligned-access
 		--enable-threads
 		$(multilib_native_use_enable doc)
 		$(use_enable nls)

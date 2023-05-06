@@ -80,6 +80,7 @@ PATCHES=(
 	"${FILESDIR}"/${P}-flist-memcmp-ub.patch
 	"${FILESDIR}"/${P}-fortify-source-3.patch
 	"${FILESDIR}"/${PN}-3.2.7-ipv6-configure-c99.patch
+	"${FILESDIR}"/${PN}-3.2.7-no-unaligned.patch
 )
 
 pkg_setup() {
@@ -136,6 +137,8 @@ src_configure() {
 			byteorder.h || die
 		append-flags -DCAREFUL_ALIGNMENT
 	fi
+
+	append-flags -DCAREFUL_ALIGNMENT
 
 	econf "${myeconfargs[@]}"
 }

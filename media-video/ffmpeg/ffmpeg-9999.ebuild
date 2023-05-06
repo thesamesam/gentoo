@@ -581,6 +581,7 @@ multilib_src_configure() {
 		--ranlib="$(tc-getRANLIB)" \
 		--pkg-config="$(tc-getPKG_CONFIG)" \
 		--optflags="${CFLAGS}" \
+		--disable-fast-unaligned \
 		$(use_enable static-libs static) \
 		$(use_enable static-libs vulkan-static) \
 		"${myconf[@]}" \

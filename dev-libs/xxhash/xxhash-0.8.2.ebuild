@@ -3,7 +3,7 @@
 
 EAPI=8
 
-inherit multilib-minimal toolchain-funcs
+inherit flag-o-matic multilib-minimal toolchain-funcs
 
 DESCRIPTION="Extremely fast non-cryptographic hash algorithm"
 HOMEPAGE="https://xxhash.com/"
@@ -22,6 +22,9 @@ src_prepare() {
 }
 
 multilib_src_compile() {
+	# https://github.com/Cyan4973/xxHash/blob/a60bd0598d1e3b0b6c6f180ab5cd22936ed85253/xxhash.h#L1583
+	append-cppflags -DXXH_FORCE_ALIGN_CHECK=1
+
 	emake AR="$(tc-getAR)" CC="$(tc-getCC)"
 }
 

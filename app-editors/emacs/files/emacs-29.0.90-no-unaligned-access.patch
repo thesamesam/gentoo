@@ -1,0 +1,19 @@
+See https://lists.gnu.org/archive/html/emacs-devel/2023-03/msg00974.html.
+--- a/src/fns.c
++++ b/src/fns.c
+@@ -443,6 +443,7 @@ If string STR1 is greater, the value is a positive number N;
+ 
+    This whitelist is incomplete but since it is only used to improve
+    performance, omitting cases is safe.  */
++#ifndef HAVE_FAST_UNALIGNED_ACCESS
+ #if defined __x86_64__|| defined __amd64__	\
+     || defined __i386__ || defined __i386	\
+     || defined __arm64__ || defined __aarch64__	\
+@@ -453,6 +454,7 @@ If string STR1 is greater, the value is a positive number N;
+ #else
+ #define HAVE_FAST_UNALIGNED_ACCESS 0
+ #endif
++#endif
+ 
+ DEFUN ("string-lessp", Fstring_lessp, Sstring_lessp, 2, 2, 0,
+        doc: /* Return non-nil if STRING1 is less than STRING2 in lexicographic order.

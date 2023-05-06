@@ -170,6 +170,10 @@ QA_CONFIG_IMPL_DECL_SKIP=(
 	statvfs64 re_set_syntax re_compile_pattern re_search re_match
 )
 
+PATCHES=(
+	"${FILESDIR}"/${PN}-29.0.90-no-unaligned-access.patch
+)
+
 src_prepare() {
 	if [[ ${PV##*.} = 9999 ]]; then
 		FULL_VERSION=$(sed -n 's/^AC_INIT([^,]*,[^0-9.]*\([0-9.]*\).*/\1/p' \

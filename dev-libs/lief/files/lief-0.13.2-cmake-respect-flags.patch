@@ -1,0 +1,29 @@
+https://github.com/lief-project/LIEF/commit/f9e6a021db5cfb9ce269b0debaa2746404341a0e
+
+From f9e6a021db5cfb9ce269b0debaa2746404341a0e Mon Sep 17 00:00:00 2001
+From: Romain Thomas <me@romainthomas.fr>
+Date: Sat, 24 Jun 2023 06:43:23 +0200
+Subject: [PATCH] Support flags from config
+
+--- a/api/python/setup.py
++++ b/api/python/setup.py
+@@ -84,6 +84,18 @@ def gen_cmake_option(self, output: str) -> List[str]:
+         else:
+             opt.append("-DCMAKE_CXX_INCLUDE_WHAT_YOU_USE=''")
+ 
++        if "cxx_flags" in self._config["lief"]["build"]:
++            value = self._config["lief"]["build"]["cxx_flags"]
++            opt.append(f"-DCMAKE_CXX_FLAGS={value}")
++        else:
++            opt.append("-DCMAKE_CXX_FLAGS=''")
++
++        if "c_flags" in self._config["lief"]["build"]:
++            value = self._config["lief"]["build"]["c_flags"]
++            opt.append(f"-DCMAKE_C_FLAGS={value}")
++        else:
++            opt.append("-DCMAKE_C_FLAGS=''")
++
+         cxx_flags = os.getenv("CXXFLAGS", None)
+         c_flags = os.getenv("CFLAGS", None)
+ 
+

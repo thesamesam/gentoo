@@ -22,8 +22,6 @@ IUSE="acl audit nls pam selinux skey split-usr su systemd xattr"
 # Taken from the man/Makefile.am file.
 LANGS=( cs da de es fi fr hu id it ja ko pl pt_BR ru sv tr zh_CN zh_TW )
 
-REQUIRED_USE="?? ( pam )"
-
 # TODO: Revisit libbsd dep once glibc-2.28 is stable as it provides strlcpy.
 COMMON_DEPEND="
 	dev-libs/libbsd

@@ -50,7 +50,8 @@ BDEPEND="
 	sys-devel/gettext
 "
 
-if [[ ${PV} == *.0 ]]; then
+# TODO: change back to just 0 later
+if [[ ${PV} == *.[01] ]]; then
 	BDEPEND+=" verify-sig? ( sec-keys/openpgp-keys-sergehallyn )"
 	VERIFY_SIG_OPENPGP_KEY_PATH=/usr/share/openpgp-keys/sergehallyn.asc
 else

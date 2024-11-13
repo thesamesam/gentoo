@@ -2147,6 +2147,10 @@ gcc_do_make() {
 			STAGE1_CXXFLAGS="-O1"
 		fi
 
+		# XXX: tidy this
+		STAGE1_CFLAGS+=" -O1 -g0 -fno-checking"
+		STAGE1_CXXFLAGS+=" -O1 -g0 -fno-checking"
+
 		STAGE1_ADAFLAGS=${STAGE1_ADAFLAGS-"-gnatpg ${ADAFLAGS}"}
 		# We only want to use the system's CFLAGS if not building a
 		# cross-compiler.

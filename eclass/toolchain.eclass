@@ -1904,6 +1904,8 @@ gcc_do_filter_flags() {
 	# Allow users to explicitly avoid flag sanitization via
 	# USE=custom-cflags.
 	if ! _tc_use_if_iuse custom-cflags; then
+		unset ADAFLAGS
+
 		# Over-zealous CFLAGS can often cause problems.  What may work for one
 		# person may not work for another.  To avoid a large influx of bugs
 		# relating to failed builds, we strip most CFLAGS out to ensure as few
@@ -2066,11 +2068,6 @@ toolchain_src_compile() {
 	[[ ! -x "${BROOT}"/usr/bin/perl ]] \
 		&& find "${WORKDIR}"/build -name '*.[17]' -exec touch {} +
 
-	# To compile ada library standard files special compiler options are passed
-	# via ADAFLAGS in the Makefile.
-	# Unset ADAFLAGS as setting this override the options
-	unset ADAFLAGS
-
 	# Older gcc versions did not detect bash and re-exec itself, so force the
 	# use of bash for them.
 	# This needs to be set for compile as well, as it's used in libtool
@@ -2150,12 +2147,14 @@ gcc_do_make() {
 			STAGE1_CXXFLAGS="-O2"
 		fi
 
+		STAGE1_ADAFLAGS=${STAGE1_ADAFLAGS-"-gnatpg ${ADAFLAGS}"}
 		# We only want to use the system's CFLAGS if not building a
 		# cross-compiler.
 		STAGE1_CFLAGS=${STAGE1_CFLAGS-"$(get_abi_CFLAGS ${TARGET_DEFAULT_ABI}) ${CFLAGS}"}
 		# multilib.eclass lacks get_abi_CXXFLAGS (bug #940501)
 		STAGE1_CXXFLAGS=${STAGE1_CXXFLAGS-"$(get_abi_CFLAGS ${TARGET_DEFAULT_ABI}) ${CXXFLAGS}"}
 		STAGE1_LDFLAGS=${STAGE1_LDFLAGS-"${abi_ldflags} ${LDFLAGS}"}
+		BOOT_ADAFLAGS=${BOOT_ADAFLAGS-"${ADAFLAGS}"}
 		BOOT_CFLAGS=${BOOT_CFLAGS-"$(get_abi_CFLAGS ${TARGET_DEFAULT_ABI}) ${CFLAGS}"}
 		BOOT_LDFLAGS=${BOOT_LDFLAGS-"${abi_ldflags} ${LDFLAGS}"}
 		LDFLAGS_FOR_TARGET="${LDFLAGS_FOR_TARGET:-${LDFLAGS}}"
@@ -2169,10 +2168,16 @@ gcc_do_make() {
 			STAGE1_CXXFLAGS+=" -U_GLIBCXX_ASSERTIONS"
 		fi
 
+		ADAFLAGS+=" -gnatpg"
+		STAGE1_ADAFLAGS+=" -gnatpg"
+		BOOT_ADAFLAGS+=" -gnatpg"
+
 		emakeargs+=(
+			STAGE1_ADAFLAGS="${STAGE1_ADAFLAGS}"
 			STAGE1_CFLAGS="${STAGE1_CFLAGS}"
 			STAGE1_CXXFLAGS="${STAGE1_CXXFLAGS}"
 			STAGE1_LDFLAGS="${STAGE1_LDFLAGS}"
+			BOOT_ADAFLAGS="${BOOT_ADAFLAGS}"
 			BOOT_CFLAGS="${BOOT_CFLAGS}"
 			BOOT_LDFLAGS="${BOOT_LDFLAGS}"
 			LDFLAGS_FOR_TARGET="${LDFLAGS_FOR_TARGET}"

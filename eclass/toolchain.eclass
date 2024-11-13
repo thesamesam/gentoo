@@ -2143,8 +2143,8 @@ gcc_do_make() {
 		# about. In principle we could check e.g. which gnat1 we are using as
 		# a bootstrap. It's simpler to do it unconditionally for now.
 		elif _tc_use_if_iuse ada || _tc_use_if_iuse d; then
-			STAGE1_CFLAGS="-O2"
-			STAGE1_CXXFLAGS="-O2"
+			STAGE1_CFLAGS="-O1"
+			STAGE1_CXXFLAGS="-O1"
 		fi
 
 		STAGE1_ADAFLAGS=${STAGE1_ADAFLAGS-"-gnatpg ${ADAFLAGS}"}

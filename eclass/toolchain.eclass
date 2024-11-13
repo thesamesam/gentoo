@@ -630,7 +630,13 @@ toolchain_src_unpack() {
 		# Needed for gcc --version to include the upstream commit used
 		# rather than only the commit after we apply our patches.
 		# It includes both with this.
-		echo "${EGIT_VERSION}" > "${S}"/gcc/REVISION || die
+		(
+			cd "${S}" || die
+			contrib/git-descr.sh > "${S}"/gcc/REVISION || die
+			if [[ -z $(<"${S}/git/revision") ]] ; then
+				echo "${EGIT_VERSION}" > gcc/REVISION || die
+			fi
+		)
 
 		if [[ -z ${PATCH_VER} ]] && ! use vanilla ; then
 			toolchain_fetch_git_patches

@@ -83,8 +83,8 @@ src_configure() {
 	mkdir -p "${NEWLIBBUILD}"
 	cd "${NEWLIBBUILD}"
 
-	export "CFLAGS_FOR_TARGET=${CFLAGS_ORIG} ${CFLAGS_FULL}"
-	export "CCASFLAGS=${CCASFLAGS_ORIG} ${CFLAGS_FULL}"
+	export "CFLAGS_FOR_TARGET=${CFLAGS_ORIG} ${CFLAGS_FULL} -Wa,--no-verify"
+	export "CCASFLAGS=${CCASFLAGS_ORIG} ${CFLAGS_FULL} -Wa,--no-verify"
 	ECONF_SOURCE=${S} \
 	econf \
 		$(use_enable unicode newlib-mb) \
@@ -96,8 +96,8 @@ src_configure() {
 	if use nano ; then
 		mkdir -p "${NEWLIBNANOBUILD}" || die
 		cd "${NEWLIBNANOBUILD}" || die
-		export "CFLAGS_FOR_TARGET=${CFLAGS_ORIG} ${CFLAGS_NANO}"
-		export "CCASFLAGS=${CCASFLAGS_ORIG} ${CFLAGS_NANO}"
+		export "CFLAGS_FOR_TARGET=${CFLAGS_ORIG} ${CFLAGS_NANO} -Wa,--no-verify"
+		export "CCASFLAGS=${CCASFLAGS_ORIG} ${CFLAGS_NANO} -Wa,--no-verify"
 		ECONF_SOURCE=${S} \
 		econf \
 			$(use_enable unicode newlib-mb) \
@@ -116,8 +116,8 @@ src_configure() {
 }
 
 src_compile() {
-	export "CFLAGS_FOR_TARGET=${CFLAGS_ORIG} ${CFLAGS_FULL}"
-	export "CCASFLAGS=${CCASFLAGS_ORIG} ${CFLAGS_FULL}"
+	export "CFLAGS_FOR_TARGET=${CFLAGS_ORIG} ${CFLAGS_FULL} -Wa,--no-verify"
+	export "CCASFLAGS=${CCASFLAGS_ORIG} ${CFLAGS_FULL} -Wa,--no-verify"
 	emake -C "${NEWLIBBUILD}"
 
 	if use nano ; then

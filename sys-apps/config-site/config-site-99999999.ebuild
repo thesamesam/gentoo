@@ -6,7 +6,9 @@ EAPI=8
 DESCRIPTION="config.site to load dropins from config.site.d"
 HOMEPAGE="https://wiki.gentoo.org/wiki/Project:Base"
 if [[ ${PV} == 99999999 ]] ; then
-	EGIT_REPO_URI="https://anongit.gentoo.org/git/proj/config-site.git"
+	#EGIT_REPO_URI="https://anongit.gentoo.org/git/proj/config-site.git"
+	EGIT_REPO_URI="https://github.com/thesamesam/config-site"
+	EGIT_BRANCH="cache"
 	inherit git-r3
 else
 	SRC_URI="https://gitweb.gentoo.org/proj/config-site.git/snapshot/${P}.tar.bz2"
@@ -26,4 +28,6 @@ src_configure() {
 src_install() {
 	insinto /usr/share
 	doins config.site
+	doins -r config.site.d/
+	doins -r confcache/
 }

@@ -1,0 +1,18 @@
+https://github.com/ispras/parmasan/pull/2
+
+From 12bc693c9334fe0887584893cbba430c0afa2a15 Mon Sep 17 00:00:00 2001
+From: Sam James <sam@gentoo.org>
+Date: Fri, 21 Feb 2025 15:29:56 +0000
+Subject: [PATCH] daemon: add <algorithm> include
+
+Needed for `std::find_if`.
+--- a/daemon/interface/parmasan-interface.cpp
++++ b/daemon/interface/parmasan-interface.cpp
+@@ -1,5 +1,6 @@
+ 
+ #include "parmasan-interface.hpp"
++#include <algorithm>
+ #include <filesystem>
+ #include <getopt.h>
+ #include "helpers.hpp"
+

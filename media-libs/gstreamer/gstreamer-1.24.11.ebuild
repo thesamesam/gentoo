@@ -38,6 +38,7 @@ DOCS=( AUTHORS ChangeLog NEWS MAINTAINERS README.md RELEASE )
 
 PATCHES=(
 	"${FILESDIR}"/gstreamer-1.24.10-disable-test-with-no-tools.patch
+	"${FILESDIR}"/gstreamer-1.22.3-no-unaligned-access.patch
 )
 
 # Rust

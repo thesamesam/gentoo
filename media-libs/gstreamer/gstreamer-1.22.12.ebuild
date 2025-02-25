@@ -33,6 +33,10 @@ BDEPEND="
 
 DOCS=( AUTHORS ChangeLog NEWS MAINTAINERS README.md RELEASE )
 
+PATCHES=(
+	"${FILESDIR}"/gstreamer-1.22.3-no-unaligned-access.patch
+)
+
 multilib_src_configure() {
 	local emesonargs=(
 		-Dtools=$(multilib_is_native_abi && echo enabled || echo disabled)

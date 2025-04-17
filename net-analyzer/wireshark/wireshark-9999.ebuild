@@ -117,6 +117,12 @@ if [[ ${PV} != *9999* ]] ; then
 	BDEPEND+=" verify-sig? ( sec-keys/openpgp-keys-wireshark )"
 fi
 
+PATCHES=(
+	"${FILESDIR}/4.4.4-fix-skipping-rawshark-tests-on-big-endian.patch"
+	# Fix critical correctness problem with LTO (bug #754021).
+	"${FILESDIR}/4.4.4-CMake-don-t-build-with-fPIE.patch"
+)
+
 python_check_deps() {
 	use test || return 0
 
@@ -150,11 +156,9 @@ src_unpack() {
 src_configure() {
 	local mycmakeargs
 
-	python_setup
+	append-flags -fPIC
 
-	if use gui ; then
-		append-cxxflags -fPIC -DPIC
-	fi
+	python_setup
 
 	mycmakeargs+=(
 		-DPython3_EXECUTABLE="${PYTHON}"

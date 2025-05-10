@@ -4,7 +4,7 @@
 EAPI=8
 
 DISTUTILS_USE_PEP517=hatchling
-PYTHON_COMPAT=( python3_{10..13} python3_13t pypy3 pypy3_11 )
+PYTHON_COMPAT=( python3_{10..14} python3_13t pypy3 pypy3_11 )
 
 inherit distutils-r1 pypi
 
@@ -24,8 +24,18 @@ BDEPEND="
 		dev-python/pytest-asyncio[${PYTHON_USEDEP}]
 		dev-python/pytest-mock[${PYTHON_USEDEP}]
 		dev-python/pytest-timeout[${PYTHON_USEDEP}]
-		dev-python/virtualenv[${PYTHON_USEDEP}]
+		$(python_gen_cond_dep '
+			dev-python/virtualenv[${PYTHON_USEDEP}]
+		' python3_{10..13} python3_13t pypy3 pypy3_11)
 	)
 "
 
 distutils_enable_tests pytest
+
+python_test() {
+	if ! has_version "dev-python/virtualenv[${PYTHON_USEDEP}]" ; then
+		EPYTEST_IGNORE+=( tests/test_virtualenv.py )
+	fi
+
+	epytest
+}

@@ -576,12 +576,52 @@ pkg_preinst() {
 	[[ -n ${BOOTSTRAP_RAP} ]] || return 0
 	is_cross && return 0
 	binutils_sanity_check
+
+	BINUTILS_NEW_SLOT=
+	if ! has_version "${CATEGORY}/${PN}:${SLOT}" ; then
+		BINUTILS_NEW_SLOT=1
+
+		# Record the latest version installed before we merge this
+		# new version for later comparison in pkg_postinst.
+		BINUTILS_PREV_NEWEST=$(best_version "<${CATEGORY}/${PN}-${PV}")
+	fi
 }
 
 pkg_postinst() {
 	# Make sure this ${CTARGET} has a binutils version selected
 	[[ -e ${EROOT}/etc/env.d/binutils/config-${CTARGET} ]] && return 0
 	binutils-config ${CTARGET}-${PV} || eerror binutils-config returned an error
+
+	# If we're installing a new slot, prompt the user to select it
+	# with 'binutils-config latest' as some users don't regularly
+	# depclean, and we can't safely change it ourselves because of builds
+	# that may already be running in parallel.
+	if [[ ${BINUTILS_NEW_SLOT} ]] ; then
+		# Only inform the user if they're behind by a slot already,
+		# i.e. if we're just now installing new 2.46, check if they
+		# have 2.44 activated, rather than complaining if they had 2.45,
+		# such as to not annoy users who depclean regularly and have it
+		# done for them.
+		local choice=$(binutils-config -l | grep ${CTARGET} | awk '{print $2}')
+		choice=${choice//$'\n'/ }
+		choice=${choice/* }
+		choice=${choice#${CTARGET}-}
+
+		# Don't warn on installations of old slots when we have
+		# something newer selected already.
+		if ver_cmp ${PV} -lt ${choice} ; then
+			return
+		fi
+
+		# "Was the current selection stale even before we merged a
+		# newer version of Binutils?"
+		if ver_cmp ${choice} -lt ${BINUTILS_PREV_NEWEST} ; then
+			ewarn "New binutils slot (${SLOT}) installed. You currently have ${choice} activated."
+			ewarn "Please activate the new version now:"
+			ewarn " # binutils-config ${CTARGET}-latest"
+			ewarn " # . /etc/profile"
+		fi
+	fi
 }
 
 pkg_postrm() {
